@@ -1,0 +1,11 @@
+Django>=4.2
+gunicorn
+psycopg2-binary
+psycopg2-binary
+django-concurrency==2.2.*
+pandas
+openpyxl
+gunicorn
+whitenoise
+psycopg2-binary
+django-environ

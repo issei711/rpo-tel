@@ -1,0 +1,92 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'portal/css/upload_csv.css' %}">
+{% endblock %}
+
+{% block content_title %}
+  <h1 class="upload-title">{{ company.name }} のエントリー情報をアップロード</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="upload-container">
+
+    <p class="nav-links">
+      <a href="{% url 'company_portal_index' %}">📂 企業ポータルへ戻る</a>
+      |
+      <a href="{% url 'admin:students_student_changelist' %}?company={{ company.id }}">👥 エントリー一覧を見る</a>
+    </p>
+
+    <p class="download-template">
+      <a href="{% url 'student_csv_template' company_id=company.id %}" class="btn-template">テンプレートCSVをダウンロード</a>
+    </p>
+
+    <p class="download-guide">
+      <a href="{% url 'exchange_csv' %}">
+        各媒体からアップロードフォーマットに変換
+      </a>
+    </p>
+
+    {% if messages %}
+      <ul class="messagelist">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="form-wrapper">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>CSVファイルをアップロード</h2>
+        <p class="hint">
+          ※ <code>company</code> 列の値が <strong>{{ company.name }}</strong> と一致している必要があります
+        </p>
+
+        <div class="file-select">
+          <label for="csv_file" class="btn-blue">ファイルを選択</label>
+          <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+          <span id="file-name">ファイルが選択されていません</span>
+        </div>
+
+        <div class="submit-btn">
+          <button type="submit" class="btn-green">アップロード</button>
+        </div>
+      </form>
+
+      <hr>
+
+      <h3>CSVのカラム仕様</h3>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>CSVカラム名</th>
+            <th>意味（日本語）</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for key, label in csv_headers %}
+            <tr>
+              <td><code>{{ key }}</code></td>
+              <td>
+                {{ label }}
+                {% if key in required_fields %}
+                  <span class="required">🔴 必須</span>
+                {% endif %}
+                {% if label == '大分類' %}
+                  (<a href="/admin/students/pattern/">パターン</a>と一致必須)
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{% static 'portal/js/upload_csv.js' %}"></script>
+{% endblock %}

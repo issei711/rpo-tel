@@ -1,0 +1,61 @@
+/* === 1. ヘッダー全体の背景＆余白調整 === */
+#header {
+  background: #4b7185;
+  padding: 10px 40px 20px 40px;
+  text-align: center;
+}
+
+#site-name {
+  padding-top: 10px;
+}
+/* サイト名リンク */
+#site-name a {
+  color: #FDE047;
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* === 2. グローバルナビの白いボックス === */
+#nav-global {
+  background: #fff;
+  display: inline-block;  /* 中央揃え用 */
+  padding: 8px 16px;
+  margin-top: 16px;
+  border-radius: 999px;   /* 丸いカプセル型 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+#nav-global ul,
+#nav-global ul li {
+  list-style-type: none !important;  /* 両方に none を指定 */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* リスト横並び＆余白 */
+#nav-global ul {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+/* === 3. ナビリンクをボタン風に === */
+#nav-global ul li a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #4b7185;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+/* ホバー／フォーカス時 */
+#nav-global ul li a:hover,
+#nav-global ul li a:focus {
+  background: #3a5c6d;
+  transform: translateY(-2px);
+}

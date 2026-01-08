@@ -1,0 +1,179 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/change_form.css' %}">
+
+  {# ページ離脱時に即時ロック解除のリクエストを飛ばす #}
+  <script>
+    // beforeunload で確実に呼び出し
+    window.addEventListener('beforeunload', function() {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('{{ unlock_url }}');
+      } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ unlock_url }}', false);
+        xhr.send();
+      }
+    });
+    // visibilitychange でも送信（モバイル等フォールバック）
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden' && navigator.sendBeacon) {
+        navigator.sendBeacon('{{ unlock_url }}');
+      }
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div id="student_form" class="module aligned">
+
+    {% if original %}
+      <div class="history-link-container">
+        <a href="{% url 'admin:students_student_history' original.pk %}" class="btn-history">🕘 履歴を見る</a>
+      </div>
+    {% endif %}
+
+    <form {% if has_file_field %}enctype="multipart/form-data"{% endif %} action="" method="post" novalidate>
+      {% csrf_token %}
+      {{ adminform.form.non_field_errors }}
+
+      <fieldset class="module aligned">
+        <h2>{% trans "基本情報" %}</h2>
+        <table class="basic-info-table">
+          <tbody>
+            <tr>
+              <th>{% trans "企業名" %}</th>
+              <td class="emphasis-cell">{{ original.company.name }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "氏名（シメイ）" %}</th>
+              <td>{{ original.full_name }}（{{ original.name|cut:" " }}）</td>
+            </tr>
+            <tr>
+              <th>{% trans "学生ID" %}</th>
+              <td>{{ original.data_id }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "電話番号" %}</th>
+              <td>{{ original.phone_number }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "卒年度・学校" %}</th>
+              <td>{{ original.grad_year }}卒 {{ original.university }} {{ original.faculty }} {{ original.department }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "大分類" %}</th>
+              <td class="emphasis-cell">{{ original.major_class }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "小分類" %}</th>
+              <td>{{ original.minor_class }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "初回エントリー経路" %}</th>
+              <td>{{ original.process_destination }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "トークスクリプトURL" %}</th>
+              <td>
+                <a href="{{ talk_script_url }}" class="talk-script-link" target="_blank">リンク</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset class="module call-info">
+        <h2>{% trans "コール情報" %}</h2>
+        <table class="call-table">
+          <thead>
+            <tr>
+              <th></th><th>{% trans "日付" %}</th>
+              <th>{% trans "時間帯" %}</th><th>{% trans "結果" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{% trans "1コール目" %}</th>
+              <td>{{ adminform.form.first_call_date }}{{ adminform.form.first_call_date.errors }}</td>
+              <td>{{ adminform.form.first_call_timezone }}{{ adminform.form.first_call_timezone.errors }}</td>
+              <td>{{ adminform.form.first_call_notes }}{{ adminform.form.first_call_notes.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "2コール目" %}</th>
+              <td>{{ adminform.form.second_call_date }}{{ adminform.form.second_call_date.errors }}</td>
+              <td>{{ adminform.form.second_call_timezone }}{{ adminform.form.second_call_timezone.errors }}</td>
+              <td>{{ adminform.form.second_call_notes }}{{ adminform.form.second_call_notes.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "3コール目" %}</th>
+              <td>{{ adminform.form.third_call_date }}{{ adminform.form.third_call_date.errors }}</td>
+              <td>{{ adminform.form.third_call_timezone }}{{ adminform.form.third_call_timezone.errors }}</td>
+              <td>{{ adminform.form.third_call_notes }}{{ adminform.form.third_call_notes.errors }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset class="module aligned">
+        <h2>{% trans "処理ステータス" %}</h2>
+        <table class="status-table">
+          <tbody>
+            <tr>
+              <th>{% trans "処理必要" %}</th>
+              <td>{{ adminform.form.need_process }}{{ adminform.form.need_process.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "Wチェ必要" %}</th>
+              <td>{{ adminform.form.done_draft }}{{ adminform.form.done_draft.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "TEL終了/処理済" %}</th>
+              <td>{{ adminform.form.done_tel }}{{ adminform.form.done_tel.errors }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset class="module aligned">
+        <h2>{% trans "備考" %}</h2>
+        <table class="remarks-table">
+          <tbody>
+            <tr>
+              <th>{% trans "TEL前特記事項" %}</th>
+              <td>{{ adminform.form.before_special_notes }}{{ adminform.form.before_special_notes.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "TEL後特記事項" %}</th>
+              <td>{{ adminform.form.after_special_notes }}{{ adminform.form.after_special_notes.errors }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "初回エントリー日" %}</th>
+              <td>{{ adminform.form.first_entry_date }}{{ adminform.form.first_entry_date.errors }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <div class="submit-row">
+        {% if change %}
+          <input type="hidden" name="_continue" value="1">
+        {% endif %}
+        <input type="submit" class="btn-save" value="保存">
+        <button type="submit" name="_save_back" class="btn-save-back">
+          {% trans "保存して前の画面に戻る" %}
+        </button>
+        {% if request.session.student_back_url %}
+            <a href="{{ request.session.student_back_url }}" class="btn-back">
+            {% trans "前の画面に戻る" %}
+          </a>
+        {% endif %}
+      </div>
+
+    </form>
+  </div>
+
+  <script src="{% static 'admin/js/change_form.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,289 @@
+/* portal/css/index.css */
+
+/* ───────────────────────────────────────────────────────────
+   共通変数
+────────────────────────────────────────────────────────── */
+:root {
+  --card-bg: #ffffff;
+  --card-border: #ddd;
+  --group-header-bg: #f0f4f8;
+  --group-header-color: #333;
+  --card-radius: 8px;
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  --gap: 16px;
+}
+
+/* ───────────────────────────────────────────────────────────
+   ポータル全体レイアウト
+────────────────────────────────────────────────────────── */
+.portal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.portal-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* グループを同じ高さに揃える */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ───────────────────────────────────────────────────────────
+   左側：企業情報
+────────────────────────────────────────────────────────── */
+.portal-left {
+  gap: 8px;
+  padding-left: 10px;
+}
+.company-name {
+  font-size: 25px;
+  font-weight: 600;
+  margin: 20px 5px;
+  color: #555;
+}
+.company-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ───────────────────────────────────────────────────────────
+   日付フォーム
+────────────────────────────────────────────────────────── */
+.portal-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #555;
+}
+.date-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.date-label {
+  font-weight: bold;
+  white-space: nowrap;
+  color: #555;
+}
+.date-input {
+  margin-left: 4px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.date-btn {
+  padding: 6px 12px;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .2s, color .2s;
+}
+.today-btn {
+  border: 1px solid green;
+  color: green;
+}
+.today-btn:hover {
+  background-color: green;
+  color: #fff;
+}
+.clear-btn {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+.clear-btn:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+.apply-btn {
+  padding: 6px 40px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity .2s;
+  margin-left: 15px;
+}
+.apply-btn:hover {
+  opacity: 0.9;
+}
+
+
+/* ───────────────────────────────────────────────────────────
+   右側：エントリー・CSVボタン
+────────────────────────────────────────────────────────── */
+.btn-entry {
+    color: #017bfe !important;
+    border: #017bfe 2px solid;
+  }
+
+  .btn-entry:hover {
+    background-color: #017bfe !important;
+    color: #fff !important;
+  }
+
+  .btn-upload {
+    color: #28a745 !important;
+    border: #28a745 2px solid;
+  }
+
+  .btn-upload:hover {
+    background-color: #28a745 !important;
+    color: #fff !important;
+  }
+
+
+/* ───────────────────────────────────────────────────────────
+   右側：結果／対象グループ配置
+────────────────────────────────────────────────────────── */
+.portal-right {
+  display: flex;
+  gap: var(--gap);
+  position: relative;
+}
+/* グループ間の縦線 */
+.portal-right .vr {
+  width: 1px;
+  background: var(--card-border);
+  align-self: stretch;
+}
+
+/* ───────────────────────────────────────────────────────────
+   グループ共通スタイル
+────────────────────────────────────────────────────────── */
+.call-group,
+.result-call-group {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+/* グループ見出しバー */
+.call-group .group-header,
+.result-call-group .group-header {
+  background: var(--group-header-bg);
+  color: var(--group-header-color);
+  font-weight: 600;
+  text-align: center;
+  padding: 8px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.result-call-group {
+  /* 左右の余白を除いた総幅のうち、任意のピクセル値に */
+  max-width: 450px;
+}
+
+/* ───────────── 「結果」用：3列 ───────────── */
+.result-call-group .group-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  padding: var(--gap);
+}
+
+/* ───────────── 「対象」用：3列 ───────────── */
+.call-group .group-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  padding: var(--gap);
+  justify-items: center;
+  align-items: stretch;
+  flex: 1;
+}
+
+/* ───────────────────────────────────────────────────────────
+   call-card：カード共通スタイル
+────────────────────────────────────────────────────────── */
+.call-card {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  background: var(--card-bg);
+  text-align: center;
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.call-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+/* タイトル */
+.call-card .title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+/* 数値 */
+.call-card .count {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--group-header-color);
+  margin-top: 4px;
+  color: #555;
+}
+
+/* アイコン＋数字行 */
+.call-card .icons,
+.call-card > a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.call-card img {
+  width: 40px;
+  height: 40px;
+  margin: 1px 6px;
+
+}
+
+.first img {
+  border-radius: 50%;
+}
+
+.icon-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.icon-count:hover {
+  text-decoration: underline;
+}
+
+/* ───────────────────────────────────────────────────────────
+   レスポンシブ：幅狭い画面では縦積み
+────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .portal-right {
+    flex-direction: column;
+  }
+  .portal-right .vr {
+    display: none;
+  }
+  .call-group,
+  .result-call-group {
+    flex: 1 1 100%;
+  }
+  .call-group .group-cards,
+  .result-call-group .group-cards {
+    grid-template-columns: 1fr !important;
+  }
+}

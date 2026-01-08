@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/base_site.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'os_favicon.png' %}">
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">RPOテレマアプリ</a>
+  </h1>
+{% endblock %}
+
+{% block nav-global %}
+  <div id="nav-global">
+    <ul>
+      <li><a href="{% url 'admin:index' %}">トップ</a></li>
+      <li><a href="{% url 'company_portal_index' %}">企業ポータル</a></li>
+    </ul>
+  </div>
+{% endblock %}

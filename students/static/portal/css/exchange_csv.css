@@ -1,0 +1,4 @@
+.form-select {
+  height: auto;       /* 自動で広がるように */
+  min-height: 3rem;   /* 最低高さを指定 */
+}

@@ -1,0 +1,111 @@
+.results {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  /* 罫線＋セル余白はそのまま */
+  .results th,
+  .results td {
+    border-bottom: 1px solid #ddd !important;
+    padding: 10px 16px !important;
+  }
+
+  /* ヘッダー行 */
+  .results thead th {
+    background: #f0f4f8;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: 12px;
+  }
+
+  /* リンク装飾 */
+  .field-name a,
+  .field-full_name a {
+    color: #007bff;
+    text-decoration: underline;
+  }
+
+/* ───────────── グレー表示対象セルのスタイル ───────────── */
+.call-empty.done {
+    background-color: #999 !important;
+    font-style: italic;
+    color: #999 !important;
+    }
+
+  /* ───────────── portal-change-title をカード風に ───────────── */
+.portal-change-title {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 16px 24px;
+    background: #ffffff;                      /* 白いカード面 */
+    border: 1px solid #f0e0a8;                /* 落ち着いたイエロー系の枠 */
+    border-radius: 12px;                      /* 角丸 */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);    /* 軽い影 */
+    z-index: 100;
+  }
+
+  /* ───────────── 見出し部分のスタイル ───────────── */
+  .portal-change-title .filter-box h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1.1rem;
+    color: #4a4a4a;
+  }
+  .portal-change-title .filter-box h2 .current-company-name {
+    color: #d9534f;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  /* ───────────── フィルターテキスト ───────────── */
+  .portal-change-title .filter-box p {
+    margin: 4px 0 0 32px;
+    font-size: 0.9rem;
+    color: #666666;
+  }
+  .portal-change-title .filter-box p .filter-highlight {
+    color: #d9534f;
+    font-weight: 600;
+  }
+
+  /* ───────────── アクションリンクをボタン風に ───────────── */
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .filter-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    color: #359668;
+    background: #ffffff;
+    border: 1px solid #359668;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+  }
+  .filter-actions a:hover {
+    background: #359668;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  /* ───────────── 固定ヘッダー下の余白を確保 ───────────── */
+  .results {
+    margin-top: 16px;  /* 既存余白 */
+    padding-top: calc( (16px*2) + 1px );  /* portal-change-title の padding + border */
+  }

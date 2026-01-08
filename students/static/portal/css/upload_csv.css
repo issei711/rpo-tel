@@ -1,0 +1,179 @@
+/* ========================================================================
+   portal/upload_csv.css
+   ======================================================================== */
+
+/* タイトル */
+.upload-title {
+    font-size: 28px;
+    margin: 0 auto 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  /* 全体コンテナ */
+  .upload-container {
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  /* ナビリンク */
+  .nav-links {
+    margin-bottom: 16px;
+  }
+  .nav-links a {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0 8px;
+  }
+
+  /* テンプレダウンロードボタン */
+  .btn-template {
+    padding: 8px 16px;
+    border: 1px solid #aaa;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    color: #333;
+    transition: background 0.2s;
+  }
+  .btn-template:hover {
+    background: #f0f0f0;
+  }
+
+  /* ガイドリンク */
+  .download-guide {
+    margin-bottom: 24px;
+  }
+  .download-guide a {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #007bff;
+  }
+
+  /* メッセージリスト */
+  .messagelist {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 24px;
+    list-style: none;
+    padding: 0;
+  }
+  .messagelist li {
+    margin: 4px 0;
+  }
+
+  /* フォーム枠 */
+  .form-wrapper {
+    padding: 20px;
+    border: 2px dashed #aaa;
+    border-radius: 8px;
+    background: #f9f9f9;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .form-wrapper h3 {
+    text-align: center;
+  }
+
+  /* フォーム内部 */
+  .form-wrapper form {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  .form-wrapper h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .form-wrapper .hint {
+    color: #d9534f;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* ファイル選択 */
+  .file-select {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .file-select input[type="file"] {
+    display: none;
+  }
+  .file-select label.btn-blue {
+    display: inline-block;
+    padding: 10px 18px;
+    background: white;
+    color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s;
+  }
+  .file-select label.btn-blue:hover {
+    background: #007bff;
+    color: white;
+  }
+  #file-name {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  #file-name.error {
+    color: #d9534f;
+  }
+
+  /* アップロードボタン */
+
+  .submit-btn {
+    text-align: center;
+  }
+
+  .submit-btn button.btn-green {
+    display: inline-block;
+    padding: 10px 24px;
+    background: white;
+    color: #28a745;
+    border: 2px solid #28a745;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s;
+  }
+  .submit-btn button.btn-green:hover {
+    background: #28a745;
+    color: white;
+  }
+
+  /* テーブル仕様 */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 24px;
+  }
+  .spec-table th,
+  .spec-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  .spec-table thead tr {
+    background: #f9f9f9;
+  }
+
+  /* 必須マーク */
+  .required {
+    color: #dc3545;
+    font-weight: bold;
+    margin-left: 4px;
+  }

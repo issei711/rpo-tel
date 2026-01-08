@@ -1,0 +1,88 @@
+/* ── 履歴を見るボタン ── */
+.history-link-container {
+    text-align: right;
+    margin-bottom: 12px;
+  }
+  .history-link-container .btn-history {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: inherit; /* 元の a.button と同じ */
+  }
+
+  /* ── 基本情報テーブル ── */
+  .basic-info-table td.emphasis-cell {
+    color: crimson;
+    font-weight: bold;
+    font-size: large;
+  }
+
+  /* ── 大分類 ── */
+  .basic-info-table td.major_class-cell {
+    color: crimson;
+    font-weight: bold;
+    font-size: large;
+  }
+
+  /* トークスクリプトリンク */
+  .basic-info-table td .talk-script-link {
+    text-decoration: underline;
+  }
+
+
+  .submit-row {
+    display: flex;
+    justify-content: center;  /* 横方向中央寄せ */
+    align-items: center;      /* 高さ方向中央揃え */
+    gap: 10px;                /* ボタン間の余白 */
+  }
+
+.submit-row .btn-save,
+.submit-row .btn-save-back,
+.submit-row .btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  height: 40px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .2s, color .2s;
+}
+
+/* 保存ボタン（緑） */
+.submit-row .btn-save {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+}
+.submit-row .btn-save:hover {
+  background-color: #218838; /* 少し濃い緑 */
+}
+
+/* 保存して前の画面に戻る（青） */
+.submit-row .btn-save-back {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  margin-left: 8px;
+}
+.submit-row .btn-save-back:hover {
+  background-color: #0069d9; /* 少し濃い青 */
+}
+
+/* 前の画面に戻る（白背景＋青文字） */
+.submit-row .btn-back {
+  background-color: #fff;
+  color: #007bff;
+  border: 1px solid #007bff;
+  margin-left: 8px;
+}
+.submit-row .btn-back:hover {
+  color: #0056b3; /* 少し濃い青 */
+}

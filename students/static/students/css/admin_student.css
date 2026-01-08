@@ -1,0 +1,65 @@
+/* — 共通テーブルスタイル — */
+.basic-info-table,
+.call-table,
+.status-table,
+.remarks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* セルの基本設定 */
+.basic-info-table th,
+.basic-info-table td,
+.call-table th,
+.call-table td,
+.status-table th,
+.status-table td,
+.remarks-table th,
+.remarks-table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  vertical-align: top;
+  background: #fff;
+  text-align: left;
+}
+
+/* ラベル列（th）のスタイル */
+.basic-info-table th,
+.status-table th,
+.remarks-table th,
+.call-table th:first-child {
+  width: 25%;
+  font-weight: bold;
+  color: #333;
+  background-color: #f0f4f8;
+}
+
+/* ヘッダー行（call-table の thead）も同じアクセント色に */
+.call-table thead th {
+  background-color: #f0f4f8;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+/* 行ホバーでのみうっすらハイライト */
+.basic-info-table tr:hover td,
+.call-table tr:hover td,
+.status-table tr:hover td,
+.remarks-table tr:hover td {
+  background-color: #f9fbfc;
+}
+
+/* セクション見出しの統一 */
+.module > h2 {
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  color: #ffff;
+  font-size: 1.1em;
+}
+
+/* セクション間の余白 */
+fieldset.module {
+  margin-bottom: 30px;
+}
