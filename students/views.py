@@ -3,9 +3,7 @@ from django.contrib import messages
 import csv
 import io
 import pandas as pd
-from django import forms
 from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from datetime import datetime
 from .models import Company, Student, Pattern
