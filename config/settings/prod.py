@@ -2,15 +2,12 @@ from .base import *
 
 DEBUG = False
 
-# 例: DJANGO_ALLOWED_HOSTS="your-service-xxxxx-uc.a.run.app,example.com"
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
 
-CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS")
 
-# HTTPS終端が前段にある前提（Cloud Run）
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Cloud SQL Unix socket (/cloudsql/INSTANCE_CONNECTION_NAME)
 INSTANCE_CONNECTION_NAME = os.environ.get("CLOUDSQL_INSTANCE_CONNECTION_NAME")
 DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")

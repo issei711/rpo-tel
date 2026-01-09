@@ -160,35 +160,49 @@ def redirect_to_company_students(request, company_id):
 
 # ***********************************************************************************************************************************
 
-
-# -------------------------
-# CSVアップロード（必須項目チェック）
-# -------------------------
-CSV_HEADERS = [
-    ('company', '企業名'),                       ('name', 'シメイ'),                    ('phone_number', '電話番号'),
-    ('process_destination', '初回エントリー経路'), ('data_id', '学生ID'),                 ('grad_year', '卒年度'),
-    ('major_class', '大分類'),                   ('minor_class', '小分類'),             ('first_call_date', '1コール目'),
-    ('first_call_timezone', '1コール目時間区分'),  ('first_call_notes', '1コール目結果'),  ('second_call_date', '2コール目'),
-    ('second_call_timezone', '2コール目時間区分'), ('second_call_notes', '2コール目結果'), ('third_call_date', '3コール目'),
-    ('third_call_timezone', '3コール目時間区分'),  ('third_call_notes', '3コール目結果'),  ('need_process', '処理必要'),
-    ('done_draft', 'Wチェ必要'),                 ('done_tel', 'TEL終了/処理済'),         ('before_special_notes', 'TEL前特記事項'),
-    ('after_special_notes', 'TEL後特記事項'),     ('full_name', '氏名'),                 ('university', '大学'),
-    ('faculty', '学部'),                         ('department', '学科'),                ('first_entry_date', '初回エントリー日'),
+COLUMNS = [
+    # key, label, options
+    ("company", "企業名", {"required": True}),
+    ("name", "シメイ", {"required": True}),
+    ("phone_number", "電話番号", {"required": True}),
+    ("process_destination", "初回エントリー経路", {}),
+    ("data_id", "学生ID", {}),
+    ("grad_year", "卒年度", {"required": True, "type": "int"}),
+    ("major_class", "大分類", {"required": True}),
+    ("minor_class", "小分類", {"required": True}),
+    ("first_call_date", "1コール目", {"type": "date"}),
+    ("first_call_timezone", "1コール目時間区分", {}),
+    ("first_call_notes", "1コール目結果", {}),
+    ("second_call_date", "2コール目", {"type": "date"}),
+    ("second_call_timezone", "2コール目時間区分", {}),
+    ("second_call_notes", "2コール目結果", {}),
+    ("third_call_date", "3コール目", {"type": "date"}),
+    ("third_call_timezone", "3コール目時間区分", {}),
+    ("third_call_notes", "3コール目結果", {}),
+    ("need_process", "処理必要", {}),
+    ("done_draft", "Wチェ必要", {}),
+    ("done_tel", "TEL終了/処理済", {}),
+    ("before_special_notes", "TEL前特記事項", {}),
+    ("after_special_notes", "TEL後特記事項", {}),
+    ("full_name", "氏名", {"required": True}),
+    ("university", "大学", {}),
+    ("faculty", "学部", {}),
+    ("department", "学科", {}),
+    ("first_entry_date", "初回エントリー日", {"type": "date"}),
 ]
 
-# 必須チェック項目
-REQUIRED = [
-    'company', 'grad_year', 'major_class', 'minor_class',
-    'name', 'phone_number', 'full_name'
-]
+# ===== 派生定義（ここから下は触らない） =====
 
-# 数値／日付チェック項目
-INT_FIELDS   = ['grad_year']
-DATE_FIELDS  = ['first_call_date', 'second_call_date', 'third_call_date', 'first_entry_date']
+CSV_HEADERS = [(key, label) for key, label, _ in COLUMNS]
+OUTPUT_COLUMNS = [key for key, _, _ in COLUMNS]
+REQUIRED = [key for key, _, opt in COLUMNS if opt.get("required")]
+INT_FIELDS = [key for key, _, opt in COLUMNS if opt.get("type") == "int"]
+DATE_FIELDS = [key for key, _, opt in COLUMNS if opt.get("type") == "date"]
 
 
-
-
+# -------------------------
+# CSVアップロード
+# -------------------------
 def upload_csv(request, company_id):
     company = Company.objects.filter(id=company_id).first()
     if not company:
@@ -244,7 +258,10 @@ def upload_csv(request, company_id):
                     try:
                         datetime.strptime(val, "%Y-%m-%d")
                     except ValueError:
-                        messages.error(request, f"{row_no}行目: 「{key}」を日付（YYYY-MM-DD）として登録してください。")
+                        messages.error(
+                            request,
+                            f"{row_no}行目: 「{key}」を YYYY-MM-DD 形式で入力してください。"
+                        )
                         return redirect(request.path)
 
         # ② 問題なければ再読み込みして登録
@@ -291,35 +308,21 @@ def download_csv_template(request, company_id):
     output = io.StringIO()
     writer = csv.writer(output)
 
-    writer.writerow([
-        'company',             'name',             'phone_number',         'process_destination',    'data_id',
-        'grad_year',           'major_class',      'minor_class',          'first_call_date',        'first_call_timezone',
-        'first_call_notes',    'second_call_date', 'second_call_timezone', 'second_call_notes',      'third_call_date',
-        'third_call_timezone', 'third_call_notes', 'need_process',         'done_draft', 'done_tel', 'before_special_notes',
-        'after_special_notes', 'full_name',        'university',           'faculty',                'department',
-        'first_entry_date'
-    ])
-    writer.writerow([company.name] + [''] * 28)
+    # 英字ヘッダ（OUTPUT_COLUMNS から自動生成）
+    writer.writerow(OUTPUT_COLUMNS)
 
-    csv_data = output.getvalue().encode('cp932', errors='replace')
-    response = HttpResponse(csv_data, content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename=\"{company.name}_template.csv\"'
+    # サンプル1行目
+    writer.writerow([company.name] + [""] * (len(OUTPUT_COLUMNS) - 1))
+
+    csv_data = output.getvalue().encode("cp932", errors="replace")
+    response = HttpResponse(csv_data, content_type="text/csv")
+    response["Content-Disposition"] = f'attachment; filename="{company.name}_template.csv"'
     return response
 
 
 # -------------------------
 # CSV変換
 # -------------------------
-# 変換後のカラム順（モデル準拠）
-OUTPUT_COLUMNS = [
-    'company','name','phone_number','process_destination','data_id','grad_year',
-    'major_class','minor_class','first_call_date','first_call_timezone','first_call_notes',
-    'second_call_date','second_call_timezone','second_call_notes',
-    'third_call_date','third_call_timezone','third_call_notes',
-    'need_process','done_draft','done_tel',
-    'before_special_notes','after_special_notes',
-    'full_name','university','faculty','department','first_entry_date'
-]
 
 # フォーマット選択肢
 FORMAT_CHOICES = (

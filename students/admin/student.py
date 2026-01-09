@@ -28,7 +28,7 @@ class StudentAdmin(admin.ModelAdmin):
 
     # *****************
     # エントリー一覧への表示設定
-    # シメイ、電話番号、大分類、1コール目、2コール目、3コール目、TEL終了/処理済
+    # シメイ、電話番号、大分類、1コール目結果、2コール目結果、3コール目結果、TEL終了/処理済
     # *****************
     form = StudentAdminForm
     list_display = (

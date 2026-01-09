@@ -14,9 +14,7 @@ RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 COPY . /app
 
-# staticfiles 生成（Manifest系を使うなら必須）
 RUN mkdir -p /app/staticfiles
-ENV DJANGO_SECRET_KEY=dummy
 RUN python manage.py collectstatic --noinput
 
 CMD ["sh", "/app/entrypoint.sh"]
