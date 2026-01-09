@@ -190,7 +190,6 @@ COLUMNS = [
 ]
 
 # ===== 派生定義（ここから下は触らない） =====
-
 CSV_HEADERS = [(key, label) for key, label, _ in COLUMNS]
 OUTPUT_COLUMNS = [key for key, _, _ in COLUMNS]
 REQUIRED = [key for key, _, opt in COLUMNS if opt.get("required")]
