@@ -2,18 +2,21 @@ FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=config.settings.prod
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# 先に entrypoint だけコピーして確実に整形する
 COPY entrypoint.sh /app/entrypoint.sh
 RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
-# 残りをコピー
 COPY . /app
 
-# sh 経由で起動（exec format error を潰す）
+# staticfiles 生成（Manifest系を使うなら必須）
+RUN mkdir -p /app/staticfiles
+ENV DJANGO_SECRET_KEY=dummy
+RUN python manage.py collectstatic --noinput
+
 CMD ["sh", "/app/entrypoint.sh"]
