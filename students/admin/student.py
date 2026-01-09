@@ -33,7 +33,7 @@ class StudentAdmin(admin.ModelAdmin):
     form = StudentAdminForm
     list_display = (
         'name', 'phone_number', 'major_class',
-        'first_call_date', 'second_call_date', 'third_call_date', 'done_tel',
+        'first_call_note', 'second_call_note', 'third_call_note', 'done_tel',
     )
     list_filter = (
         'grad_year',
