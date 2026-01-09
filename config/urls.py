@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import RedirectView
 from students.views import (
     portal_index,
     redirect_to_company_students,
@@ -23,6 +24,9 @@ urlpatterns = [
 
     # ✅ 汎用ファイル変換画面
     path("portal/exchange-csv/", exchange_csv, name="exchange_csv"),
+
+    # ✅ ルートURLは管理画面にリダイレクト
+    path("", RedirectView.as_view(url="/admin/", permanent=False)),
 
     # ✅ Djangoの標準管理画面
     path("admin/", admin.site.urls),
