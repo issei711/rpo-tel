@@ -8,12 +8,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY . .
+# 先に entrypoint だけコピーして確実に整形する
+COPY entrypoint.sh /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
-# WhiteNoise運用なら collectstatic はビルド時にやるのが綺麗
-# ※ SECRET_KEY が必要な設定を書いてる場合は、prod.py 側で collectstatic を阻害しない設計にする
-RUN python manage.py collectstatic --noinput
+# 残りをコピー
+COPY . /app
 
-RUN chmod +x /app/entrypoint.sh
-RUN sed -i 's/\r$//' /app/entrypoint.sh
+# sh 経由で起動（exec format error を潰す）
 CMD ["sh", "/app/entrypoint.sh"]
