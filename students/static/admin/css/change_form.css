@@ -86,3 +86,17 @@
 .submit-row .btn-back:hover {
   color: #0056b3; /* 少し濃い青 */
 }
+
+/* ───────────── change_form：氏名（H2）を上部固定 ───────────── */
+#content > h2 {
+  position: sticky;
+  top: 0;                  /* adminヘッダと被るなら 48px にする */
+  z-index: 150;
+
+  background: #ffffff;
+  padding: 12px 16px;
+  margin: 0 0 16px 0;
+
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}

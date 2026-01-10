@@ -13,6 +13,7 @@ class CallProgressFilter(admin.SimpleListFilter):
             ('first', '1コール目'),
             ('second', '2コール目'),
             ('third', '3コール目'),
+            ('third_done_not_closed', '3コール完了・未TEL終了'),
             ('done', 'TEL終了/処理済'),
         ]
 
@@ -34,6 +35,13 @@ class CallProgressFilter(admin.SimpleListFilter):
                 first_call_date__isnull=False,
                 second_call_date__isnull=False,
                 third_call_date__isnull=True,
+                done_tel=False
+            )
+        if v == 'third_done_not_closed':
+            return queryset.filter(
+                first_call_date__isnull=False,
+                second_call_date__isnull=False,
+                third_call_date__isnull=False,
                 done_tel=False
             )
         if v == 'done':
