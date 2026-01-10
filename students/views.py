@@ -224,7 +224,7 @@ def upload_csv(request, company_id):
         if text is None:
             # 先頭バイトも出すと原因特定が速い（BOMやバイナリ混入判定）
             head = raw[:16].hex()
-            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。")
+            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。\nCSVは {used_enc} として読み込みました。")
             return redirect(request.path)
 
         # 「何で読めたか」を一旦UIに出して確認（安定したら外してOK）
