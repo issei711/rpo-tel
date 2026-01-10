@@ -210,17 +210,19 @@ def upload_csv(request, company_id):
         file = request.FILES["csv_file"]
         raw = file.read()
 
-        try:
-            text = raw.decode("utf-8-sig")   # UTF-8 + BOM も吸える
-        except UnicodeDecodeError:
+        for enc in ("utf-8-sig", "utf-8", "cp932", "shift_jis"):
             try:
-                text = raw.decode("cp932")   # Windows Excel 系（Shift_JIS互換）
+                text = raw.decode(enc)
+                break
             except UnicodeDecodeError:
-                messages.error(
-                    request,
-                    "CSVの文字コードが不正です。UTF-8 または Shift_JIS（CP932）で保存してください。"
-                )
-                return redirect(request.path)
+                text = None
+
+        if text is None:
+            messages.error(
+                request,
+                "CSVの文字コードが不正です。UTF-8 または Shift_JIS（CP932）で保存してください。"
+            )
+            return redirect(request.path)
 
         reader = csv.DictReader(text.splitlines())
 
