@@ -210,19 +210,25 @@ def upload_csv(request, company_id):
         file = request.FILES["csv_file"]
         raw = file.read()
 
+        text = None
+        used_enc = None
+
         for enc in ("utf-8-sig", "utf-8", "cp932", "shift_jis"):
             try:
                 text = raw.decode(enc)
+                used_enc = enc
                 break
             except UnicodeDecodeError:
-                text = None
+                pass
 
         if text is None:
-            messages.error(
-                request,
-                "CSVの文字コードが不正です。UTF-8 または Shift_JIS（CP932）で保存してください。"
-            )
+            # 先頭バイトも出すと原因特定が速い（BOMやバイナリ混入判定）
+            head = raw[:16].hex()
+            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。")
             return redirect(request.path)
+
+        # 「何で読めたか」を一旦UIに出して確認（安定したら外してOK）
+        messages.info(request, f"CSVは {used_enc} として読み込みました。")
 
         reader = csv.DictReader(text.splitlines())
 
