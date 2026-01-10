@@ -213,17 +213,17 @@ def upload_csv(request, company_id):
         text = None
         used_enc = None
 
+        errors = []
         for enc in ("utf-8-sig", "utf-8", "cp932", "shift_jis"):
             try:
                 text = raw.decode(enc)
                 used_enc = enc
                 break
-            except UnicodeDecodeError:
-                pass
-
-        if text is None:
-            head = raw[:16].hex()
-            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。")
+            except Exception as e:
+                errors.append(f"{enc}: {type(e).__name__}: {e}")
+        else:
+            head = raw[:64].hex()
+            messages.error(request, "CSVを読み込めませんでした。\n" + "\n".join(errors) + f"\n先頭バイト: {head}")
             return redirect(request.path)
 
         # ここから先、必ず text（= used_encでdecode済み）だけを使う
