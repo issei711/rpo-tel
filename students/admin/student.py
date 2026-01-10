@@ -20,6 +20,7 @@ from .urls import urlpatterns as custom_urls
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
+    ordering = ('name',)
 
     # 複数選択→ CSV ダウンロードアクション
     actions = ['export_as_csv']
