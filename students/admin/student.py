@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.db.models import Q
+from django.db.models.functions import Collate
 
 from ..models import Student, Company
 from ..forms.student import StudentAdminForm
@@ -20,7 +21,7 @@ from .urls import urlpatterns as custom_urls
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    ordering = ('name',)
+    ordering = ()
 
     # 複数選択→ CSV ダウンロードアクション
     actions = ['export_as_csv']
@@ -176,7 +177,7 @@ class StudentAdmin(admin.ModelAdmin):
                 Q(third_call_date=call_date)
             )
 
-        return qs
+        return qs.order_by(Collate("name", "ja-x-icu"))
 
 
 
