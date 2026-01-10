@@ -23,3 +23,20 @@ DATABASES = {
         "HOST": f"/cloudsql/{INSTANCE_CONNECTION_NAME}",
     }
 }
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "root": {"handlers": ["console"], "level": "INFO"},
+    "loggers": {
+        # 500のスタックトレースはここに出る
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+        # DB/ORM系の例外調査に便利（うるさければ後でOFF）
+        "django.db.backends": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+        # セキュリティ/CSRF系
+        "django.security": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+    },
+}
