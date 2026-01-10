@@ -222,83 +222,91 @@ def upload_csv(request, company_id):
                 pass
 
         if text is None:
-            # 先頭バイトも出すと原因特定が速い（BOMやバイナリ混入判定）
             head = raw[:16].hex()
-            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。\nCSVは {used_enc} として読み込みました。")
+            messages.error(request, f"CSVを読み込めませんでした（先頭バイト: {head}）。CSVとして保存し直してください。")
             return redirect(request.path)
 
-        # 「何で読めたか」を一旦UIに出して確認（安定したら外してOK）
-        messages.info(request, f"CSVは {used_enc} として読み込みました。")
+        # ここから先、必ず text（= used_encでdecode済み）だけを使う
+        reader = csv.DictReader(io.StringIO(text))
 
-        reader = csv.DictReader(text.splitlines())
-
-        # ① 全行チェック
         pattern = Pattern.objects.filter(company=company).first()
         pattern_major_classes = set()
         if pattern:
             pattern_major_classes = set(pattern.items.values_list("major_class", flat=True))
 
+        rows = []
         for row_no, row in enumerate(reader, start=2):
-            # 企業名チェック
+            # 空行スキップ（CSV末尾の空行対策）
+            if not any((v or "").strip() for v in row.values()):
+                continue
+
             if row.get("company") != company.name:
                 messages.error(request, f"{row_no}行目: company が一致しません。")
                 return redirect(request.path)
 
-            # major_class が PatternItem にあるかチェック
             major_class = row.get("major_class")
             if major_class not in pattern_major_classes:
                 messages.error(request, f"{row_no}行目: major_class '{major_class}' がパターン一覧にまだ登録されていません。")
                 return redirect(request.path)
 
-            # 必須フィールドチェック
             for key in REQUIRED:
-                if not row.get(key):
+                if not (row.get(key) or "").strip():
                     messages.error(request, f"{row_no}行目: 「{key}」が空欄です。")
                     return redirect(request.path)
 
-            # 整数フィールドチェック
             for key in INT_FIELDS:
                 try:
-                    int(row[key])
-                except (TypeError, ValueError):
+                    int((row.get(key) or "").strip())
+                except ValueError:
                     messages.error(request, f"{row_no}行目: 「{key}」が整数ではありません。")
                     return redirect(request.path)
 
-            # 日付フィールドチェック (YYYY-MM-DD 形式を想定)
             for key in DATE_FIELDS:
-                val = row.get(key)
+                val = (row.get(key) or "").strip()
                 if val:
                     try:
                         datetime.strptime(val, "%Y-%m-%d")
                     except ValueError:
-                        messages.error(
-                            request,
-                            f"{row_no}行目: 「{key}」を YYYY-MM-DD 形式で入力してください。"
-                        )
+                        messages.error(request, f"{row_no}行目: 「{key}」を YYYY-MM-DD 形式で入力してください。")
                         return redirect(request.path)
 
-        # ② 問題なければ再読み込みして登録
-        file.seek(0)
-        text = file.read().decode("shift_jis", errors="ignore")
-        reader = csv.DictReader(text.splitlines())
-        created = 0
+            rows.append(row)
 
-        for row in reader:
+        # 登録（rowsに貯めたので再パース不要）
+        created = 0
+        for row in rows:
             Student.objects.create(
                 company=company,
-                data_id=row.get("data_id"),                           grad_year=int(row["grad_year"]),                      major_class=row["major_class"],
-                minor_class=row["minor_class"],                       name=row["name"],                                     phone_number=row["phone_number"],
-                process_destination=row.get("process_destination"),   before_special_notes=row.get("before_special_notes"), first_call_date=row.get("first_call_date") or None,
-                first_call_timezone=row.get("first_call_timezone"),   first_call_notes=row.get("first_call_notes"),         second_call_date=row.get("second_call_date") or None,
-                second_call_timezone=row.get("second_call_timezone"), second_call_notes=row.get("second_call_notes"),       third_call_date=row.get("third_call_date") or None,
-                third_call_timezone=row.get("third_call_timezone"),   third_call_notes=row.get("third_call_notes"),         need_process=(row.get("need_process") == "True"),
-                done_draft=(row.get("done_draft") == "True"),         done_tel=(row.get("done_tel") == "True"),             after_special_notes=row.get("after_special_notes"),
-                full_name=row["full_name"],                           university=row["university"],                         faculty=row["faculty"],
-                department=row["department"],                         first_entry_date=row.get("first_entry_date") or None,
+                data_id=row.get("data_id"),
+                grad_year=int(row["grad_year"]),
+                major_class=row["major_class"],
+                minor_class=row["minor_class"],
+                name=row["name"],
+                phone_number=row["phone_number"],
+                process_destination=row.get("process_destination"),
+                before_special_notes=row.get("before_special_notes"),
+                first_call_date=row.get("first_call_date") or None,
+                first_call_timezone=row.get("first_call_timezone"),
+                first_call_notes=row.get("first_call_notes"),
+                second_call_date=row.get("second_call_date") or None,
+                second_call_timezone=row.get("second_call_timezone"),
+                second_call_notes=row.get("second_call_notes"),
+                third_call_date=row.get("third_call_date") or None,
+                third_call_timezone=row.get("third_call_timezone"),
+                third_call_notes=row.get("third_call_notes"),
+                need_process=(row.get("need_process") == "True"),
+                done_draft=(row.get("done_draft") == "True"),
+                done_tel=(row.get("done_tel") == "True"),
+                after_special_notes=row.get("after_special_notes"),
+                full_name=row["full_name"],
+                university=row["university"],
+                faculty=row["faculty"],
+                department=row["department"],
+                first_entry_date=row.get("first_entry_date") or None,
             )
             created += 1
 
-        messages.success(request, f"新規登録完了: {created} 件")
+        messages.success(request, f"新規登録完了: {created} 件（encoding={used_enc}）")
         return redirect(request.path)
 
     return render(request, "portal/upload_csv.html", {
