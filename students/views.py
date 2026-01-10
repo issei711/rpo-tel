@@ -264,10 +264,20 @@ def upload_csv(request, company_id):
             for key in DATE_FIELDS:
                 val = (row.get(key) or "").strip()
                 if val:
-                    try:
-                        datetime.strptime(val, "%Y-%m-%d")
-                    except ValueError:
-                        messages.error(request, f"{row_no}行目: 「{key}」を YYYY-MM-DD 形式で入力してください。")
+                    ok = False
+                    for fmt in ("%Y-%m-%d", "%Y/%m/%d"):
+                        try:
+                            datetime.strptime(val, fmt)
+                            ok = True
+                            break
+                        except ValueError:
+                            pass
+
+                    if not ok:
+                        messages.error(
+                            request,
+                            f"{row_no}行目: 「{key}」は YYYY-MM-DD または YYYY/MM/DD 形式で入力してください。"
+                        )
                         return redirect(request.path)
 
             rows.append(row)
