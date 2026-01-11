@@ -226,8 +226,13 @@ def upload_csv(request, company_id):
             messages.error(request, "CSVを読み込めませんでした。\n" + "\n".join(errors) + f"\n先頭バイト: {head}")
             return redirect(request.path)
 
-        # ここから先、必ず text（= used_encでdecode済み）だけを使う
         reader = csv.DictReader(io.StringIO(text))
+
+        # ★ここに置く（関数内で完結させるならここが一番自然）
+        def parse_bool(val):
+            if val is None:
+                return False
+            return str(val).strip().lower() in ("true", "1", "yes", "y")
 
         pattern = Pattern.objects.filter(company=company).first()
         pattern_major_classes = set()
@@ -236,7 +241,6 @@ def upload_csv(request, company_id):
 
         rows = []
         for row_no, row in enumerate(reader, start=2):
-            # 空行スキップ（CSV末尾の空行対策）
             if not any((v or "").strip() for v in row.values()):
                 continue
 
@@ -272,7 +276,6 @@ def upload_csv(request, company_id):
 
             rows.append(row)
 
-        # 登録（rowsに貯めたので再パース不要）
         created = 0
         for row in rows:
             Student.objects.create(
@@ -294,9 +297,9 @@ def upload_csv(request, company_id):
                 third_call_date=row.get("third_call_date") or None,
                 third_call_timezone=row.get("third_call_timezone"),
                 third_call_notes=row.get("third_call_notes"),
-                need_process=(row.get("need_process") == "True"),
-                done_draft=(row.get("done_draft") == "True"),
-                done_tel=(row.get("done_tel") == "True"),
+                need_process=parse_bool(row.get("need_process")),
+                done_draft=parse_bool(row.get("done_draft")),
+                done_tel=parse_bool(row.get("done_tel")),
                 after_special_notes=row.get("after_special_notes"),
                 full_name=row["full_name"],
                 university=row["university"],
