@@ -413,6 +413,7 @@ FORMAT_MAPPINGS = {
     'かんりくん': {
         'ID': 'data_id',
         '携帯電話番号': 'phone_number',
+        'メモ': 'before_special_notes',
         '学校名': 'university',
         '学部名': 'faculty',
         '学科名': 'department',
